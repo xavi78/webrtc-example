@@ -2,9 +2,14 @@
 			'iceServers': [{
 				'url': 'stun:stun.services.mozilla.com'
 			}, {
-				'url': 'stun:stun.l.google.com:19302'
+				"url": "turn:<domain>",
+				"username": "<username>",
+				"credential": "<password>"
 			}]
-		}
+		};
+		const urlParams = new URLSearchParams(window.location.search);
+		var turnOnly = false;
+		if (urlParams && urlParams.get('turnOnly')) turnOnly = Boolean(urlParams.get('turnOnly'));
 		const socket = io('http://localhost:3000');
 		const sendMessageToServer = message => socket.emit('message', message);
 		const callButton = document.querySelector('#call-button');
@@ -76,7 +81,13 @@
 
 		// adds candidate to RTCPeerConnection
 		const onCandidate = async candidate => {
-			await pc.addIceCandidate(candidate);
+			if (candidate && candidate.candidate) {
+				const typ = candidate.candidate.split(' ')[7]; // type value
+				if (turnOnly && typ === 'relay')
+					await pc.addIceCandidate(candidate);
+				else if (!turnOnly)
+					await pc.addIceCandidate(candidate);
+			}
 		};
 
 		// message callback to process messages from signaling server

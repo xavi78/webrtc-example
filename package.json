@@ -1,0 +1,19 @@
+{
+  "name": "webrtc-example",
+  "version": "1.0.0",
+  "description": "WebRTC exampling with Socket.io signling server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "keywords": [
+    "WebRTC",
+    "Socket.io"
+  ],
+  "author": "David Novicki <supercycle91@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1"
+  }
+}
